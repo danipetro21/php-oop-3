@@ -120,7 +120,7 @@ class Persona
                 "Cognome: " . $this->getCognome() . "<br>" . 
                 "Data di nascita: " . $this->getDataNascita() . "<br>" . 
                 "Luogo di nascita: " . $this->getLuogoNascita() . "<br>" . 
-                "Codice fiscale: " .$this->getCf() . "<br>"; 
+                "Codice fiscale: " .$this->getCf(); 
     }
 
 
@@ -128,16 +128,95 @@ class Persona
 
 class Impiegato extends Persona
 {
+    private Stipendio $stipendio;
+    private $dataAssunzione;
+
+    public function __construct($nome,$cognome,$data_di_nascita,$luogo_di_nascita,$cf, Stipendio $stipendio, $dataAssunzione)
+    {
+        parent :: __construct($nome, $cognome, $data_di_nascita, 
+                                $luogo_di_nascita, $cf);
+
+        $this -> setStipendio($stipendio);
+        $this -> setDataAssunzione($dataAssunzione);
+    }
+
+    public function setStipendio($stipendio){
+        $this->stipendio = $stipendio;
+    }        
+    public function getStipendio(){
+        return $this->stipendio;
+    }
+    public function setDataAssunzione($dataAssunzione){
+        $this->dataAssunzione = $dataAssunzione;
+    }
+    public function getDataAssunzione(){
+        return $this->dataAssunzione;
+    }
+
+    public function getAnnualSalary() {
+
+        return $this -> getStipendio() -> getStipendio();
+    }    
+
+    public function getHtml() {
+
+        return parent :: getHtml() . "<br>" .
+             "Data Assunzione: ". $this -> getDataAssunzione() . "<br>" .
+             $this -> getStipendio() -> getHtml();
+    }
+
 }
 
 class Capo extends Persona
 {
+    private $dividendo;
+    private $bonus;
+
+    public function __construct($nome,$cognome,$data_di_nascita,$luogo_di_nascita,$cf, $dividendo, $bonus)
+    {
+        parent :: __construct($nome, $cognome, $data_di_nascita, 
+                                $luogo_di_nascita, $cf);
+
+        $this -> setDividendo($dividendo);
+        $this -> setBonus($bonus);
+    }
+
+    public function setDividendo($dividendo){
+        $this->dividendo = $dividendo;
+    }
+    public function getDividendo(){
+        return $this->dividendo;
+    }
+    public function setBonus($bonus){
+        $this->bonus= $bonus;
+    }
+    public function getBonus(){
+        return $this-> bonus;
+    }
+
+    public function redditoA(){
+        // dividendo * 12 + bonus
+
+        return ($this->getDividendo() * 12 ) + $this->getBonus();
+
+    }
+
+    public function getHtml()
+    {
+        return parent :: getHtml() . "<br>" .
+        "Dividendo: ". $this -> getDividendo() . "<br>" .
+        "Bonus: " . $this -> getBonus() . "<br>" .
+        "Reddito annuale: " . $this->redditoA() . " €";
+    }
 }
 
 $stipendio = new Stipendio(1600, 1100, 950);
-echo $stipendio -> getHtml();
-
-echo "<br>" . "<br>";
-
-$daniele = new Persona("daniele", "petrollo" , "2000-05-21", "Assisi" , "1234567890443");
+echo "<h1>IMPIEGATO</h1>";
+$daniele = new Impiegato("daniele", "petrollo" , "2000-05-21", "Assisi" , "1234567890443", $stipendio, "2019-01-12" );
 echo $daniele -> getHtml();
+
+echo "<br> <br>";
+echo "<h1>CAPO</h1>";
+$maddalena = new Capo("Pinco" , "Pallo" , "1987-09-16" , "Roma", "34834384838838" , 3422, 12222);
+echo $maddalena -> getHtml();
+
